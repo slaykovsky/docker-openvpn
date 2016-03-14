@@ -1,15 +1,17 @@
 # Original credit: https://github.com/jpetazzo/dockvpn
+# Forked from: https://github.com/kylemanna/docker-openvpn
 
 # Smallest base image
-FROM alpine:3.2
+FROM debian:8
 
-MAINTAINER Kyle Manna <kyle@kylemanna.com>
+MAINTAINER Alexey Slaykovsky <alexey@slaykovsky.com>
 
-RUN echo "http://dl-4.alpinelinux.org/alpine/edge/community/" >> /etc/apk/repositories && \
-    echo "http://dl-4.alpinelinux.org/alpine/edge/testing/" >> /etc/apk/repositories && \
-    apk add --update openvpn iptables bash easy-rsa openvpn-auth-pam google-authenticator pamtester && \
+RUN echo "deb http://deb.i2p2.no/ jessie main" >> /etc/apt/sources.list.d/i2p.list && \
+    echo "deb-src http://deb.i2p2.no/ jessie main" >> /etc/apt/sources.list.d/i2p.list && \
+    apt update && apt install -y i2p-keyring && apt full-upgrade -y && \
+    apt install -y openvpn iptables easy-rsa tor i2p unbound privoxy && \
     ln -s /usr/share/easy-rsa/easyrsa /usr/local/bin && \
-    rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
+    rm -rf /tmp/* /var/tmp/* /var/cache/apt/*
 
 # Needed by scripts
 ENV OPENVPN /etc/openvpn
@@ -27,6 +29,3 @@ CMD ["ovpn_run"]
 
 ADD ./bin /usr/local/bin
 RUN chmod a+x /usr/local/bin/*
-
-# Add support for OTP authentication using a PAM module
-ADD ./otp/openvpn /etc/pam.d/
