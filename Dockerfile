@@ -8,7 +8,7 @@ MAINTAINER Alexey Slaykovsky <alexey@slaykovsky.com>
 
 RUN echo "deb http://deb.i2p2.no/ jessie main" >> /etc/apt/sources.list.d/i2p.list && \
     echo "deb-src http://deb.i2p2.no/ jessie main" >> /etc/apt/sources.list.d/i2p.list && \
-    apt update && apt install -y i2p-keyring && apt full-upgrade -y && \
+    apt update && apt install -y --force-yes i2p-keyring && apt full-upgrade -y && \
     apt install -y openvpn iptables easy-rsa tor i2p unbound privoxy && \
     ln -s /usr/share/easy-rsa/easyrsa /usr/local/bin && \
     rm -rf /tmp/* /var/tmp/* /var/cache/apt/*
